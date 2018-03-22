@@ -9,6 +9,18 @@ const db = require('./api/db');
 app.listen(config.port, function () {
   console.log(`Server running at port: ${config.port}`)
 });
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 app.use('/api/v1', router);
 
@@ -25,6 +37,7 @@ app.use(function (error, req, res, next) {
   }
   next(error)
 });
+
 app.use(function (err, req, res, next) {
   res.status(err.status || 500)
   res.render('error', {
@@ -32,8 +45,5 @@ app.use(function (err, req, res, next) {
     error: {}
   })
 });
-
-
-
 
 module.exports = app;

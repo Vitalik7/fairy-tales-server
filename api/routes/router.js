@@ -1,5 +1,6 @@
 const express = require('express');
 const fairyTale = require('./../model');
+const fairyTaleList = require('./../modelList');
 const router = express.Router();
 
 // require('./audio');
@@ -9,22 +10,20 @@ const router = express.Router();
 // require('./lullabies');
 // require('./recent-uploaded');
 
-
 router.get('/fairytales', (req, res, next) => {
-    fairyTale.find({})
-        .then(function (fairyTales) {
-            res.json({fairyTales})
+    fairyTaleList.find({})
+
+        .then(function (fairytales) {
+            res.json({fairytales})
         }).catch(next)
-})
+});
 
 
-
-router.post('/fairytales', function (req, res, next) {
-
-    new fairyTale(req.body.tales)
+router.post('/fairytales', (req, res, next) => {
+    new fairyTale(req.body.fairytale)
         .save()
-        .then(function (tales) {
-            res.json({tales})
+        .then(function (fairytale) {
+            res.json({fairytale})
         })
         .catch(next)
 });
@@ -108,7 +107,9 @@ router.get('/folk/:id', (req, res, next) => {
 });
 // lullabies
 router.get('/lullabies', (req, res, next) => {
-    fairyTale.find({})
+    fairyTale
+        .find({lullaby: true})
+
         .then(function (lullabiesFairyTales) {
             res.json({lullabiesFairyTales})
         }).catch(next)
@@ -120,10 +121,5 @@ router.get('/lullabies/:id', (req, res, next) => {
             res.json({lullabiesFairyTales})
         }).catch(next)
 });
-
-
-
-
-
 
 module.exports = router
