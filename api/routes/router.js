@@ -12,12 +12,21 @@ const router = express.Router();
 
 router.get('/fairytales', (req, res, next) => {
     fairyTale.find({})
-
         .then(function (fairytales) {
             res.json({fairytales})
         }).catch(next)
 });
 
+router.get('/fairytales/:id', (req, res, next) => {
+    fairyTale.findById(req.params.id, (err, fairytales) => {
+            if (err) {
+                res.status(400).json(err)
+            }
+            res.status(200).json(fairytales)
+        })
+
+
+});
 
 router.post('/fairytales', (req, res, next) => {
     new fairyTale(req.body.fairytale)
@@ -28,7 +37,7 @@ router.post('/fairytales', (req, res, next) => {
         .catch(next)
 });
 
-router.put('/fairytales/:id', function (req, res) {
+router.get('/fairytales/:id', function (req, res) {
     fairyTale.findById(req.params.id, function (err, fairyTale) {
         fairyTale.audioUrl = req.body.fairyTale.audioUrl || fairyTale.audioUrl;
         fairyTale.createTime = req.body.fairyTale.createTime || fairyTale.createTime;
@@ -39,12 +48,6 @@ router.put('/fairytales/:id', function (req, res) {
         fairyTale.updateTime = req.body.fairyTale.updateTime || fairyTale.updateTime;
         fairyTale.updated = req.body.fairyTale.updated || fairyTale.updated;
 
-        fairyTale.save(function (err, fairyTale) {
-            if (err) {
-                res.status(400).json(err)
-            }
-            res.status(200).json(fairyTale)
-        })
     })
 
 });
@@ -109,7 +112,6 @@ router.get('/folk/:id', (req, res, next) => {
 router.get('/lullabies', (req, res, next) => {
     fairyTale
         .find({lullaby: true})
-
         .then(function (lullabiesFairyTales) {
             res.json({lullabiesFairyTales})
         }).catch(next)
@@ -121,5 +123,10 @@ router.get('/lullabies/:id', (req, res, next) => {
             res.json({lullabiesFairyTales})
         }).catch(next)
 });
+
+
+
+
+
 
 module.exports = router
